@@ -1,0 +1,54 @@
+<% layout('/layouts/boilerplate')%>
+
+<h1><%=familymember.first%>'s Family Tree</h1>
+
+<% if (familymember.mother) { %>
+<div class="container">
+    <div class="row">
+      <div class="col-sm">
+        Mother: <a href="/familymember/<%=familymember.father.first%>/tree"> <%=familymember.mother.first%> <%=familymember.mother.last%> </a>
+      </div>
+    </div>
+</div>
+<% } %>
+
+<% if (familymember.father) { %>
+<div class="container">
+    <div class="row">
+      <div class="col-sm">
+        Father: <a href="/familymember/<%=familymember.father.first%>/tree"> <%=familymember.father.first%> <%=familymember.father.last%> </a>
+      </div>
+    </div>
+</div>
+<% } %>
+
+
+<% if (familymember.spouse) { %>
+<div class="container">
+    <div class="row">
+      <div class="col-sm">
+        Spouse: <a href="/familymember/<%=familymember.spouse.first%>/tree"> <%=familymember.spouse.first%> <%=familymember.spouse.last%> </a>
+      </div>
+    </div>
+</div>
+<% } %>
+
+  <div class="container">
+    <div class="row">
+    <% for (let sibling of familymember.siblings) { %>
+      <div class="col-sm">
+        Sibling: <a href="/familymember/<%=sibling.first%>/tree"> <%=sibling.first%> <%=sibling.last%> </a>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div class="row">
+    <% for (let child of familymember.children) { %>
+      <div class="col-sm">
+        Child: <a href="/familymember/<%=child.first%>/tree"> <%=child.first%> <%=child.last%> </a>
+      </div>
+      <% } %>
+    </div>
+  </div>
