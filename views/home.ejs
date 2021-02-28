@@ -1,2 +1,8 @@
-<% layout('/layouts/boilerplate',{user:user})%>
-<h1><%=user%>'s Home Page</h1>
+<% layout('/layouts/boilerplate',{user})%>
+    <h1>
+        <% if (user.first) { %>
+            Welcome to <%=user.first%>'s Family Album Home Page!
+                <%} else {%>
+                    Welcome to the Family Album home page. Please register or login!
+                    <% } %>
+    </h1>

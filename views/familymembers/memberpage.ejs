@@ -1,3 +1,5 @@
-<% layout('/layouts/boilerplate')%>
+<% layout('/layouts/boilerplate',{user})%>
 
-<h1><%=familymember.first %>'s Album</h1>
+    <h1>
+        <%=user.first %>'s Album
+    </h1>

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const dbUrl = 'mongodb://localhost:27017/family-album';
 const Familymember = require('../models/familymember');
+const User = require('../models/user')
 
 
 mongoose.connect(dbUrl, {
@@ -16,6 +17,7 @@ db.once('open', () => {
 })
 
 const seedDB = async () => {
+    await User.deleteMany({});
     await Familymember.deleteMany({});
     let member = new Familymember({
         first: 'Bethany',
