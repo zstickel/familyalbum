@@ -2,7 +2,8 @@ const User = require('../models/user');
 const isFamilyMember = require('../utilities/userIsFamilyMember');
 
 module.exports.renderRegForm = (req, res) => {
-    res.render('users/register', { user: "Bethany" });
+    const user = req.user;
+    res.render('users/register', { user });
 }
 
 module.exports.registerUser = async (req, res) => {
@@ -29,16 +30,16 @@ module.exports.registerUser = async (req, res) => {
 }
 
 module.exports.renderLoginForm = (req, res) => {
-    res.render('users/login', { user: "Bethany" });
+    const user = req.user;
+    res.render('users/login', { user });
 }
 
 
 module.exports.loginUser = (req, res) => {
     const authedUser = req.user.first;
-    // req.flash('success', `Welcome back ${authedUser}!`);
-    const redirectUrl = req.session.returnTo || '/';
-    delete req.session.returnTo;
-    res.redirect(redirectUrl);
+    const user = req.user;
+    console.log(user);
+    res.redirect('/');
 }
 
 module.exports.logOut = (req, res) => {

@@ -1,6 +1,6 @@
 <% layout('/layouts/boilerplate',{user})%>
     <h1>
-        <% if (user.first) { %>
+        <% if (user) { %>
             Welcome to <%=user.first%>'s Family Album Home Page!
                 <%} else {%>
                     Welcome to the Family Album home page. Please register or login!
