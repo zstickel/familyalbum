@@ -1,8 +1,10 @@
 const Familymember = require('../models/familymember');
+const isFamilyMember = require('../utilities/userIsFamilyMember');
 
-
-module.exports.joinfamily = (req, res) => {
-    res.render('familymembers/joinfamily', { user: 'Bethany' });
+module.exports.joinfamily = async (req, res) => {
+    const user = req.user;
+    let member = await isFamilyMember(user);
+    res.render('familymembers/joinfamily', { member, user });
 }
 
 module.exports.index = async (req, res) => {
