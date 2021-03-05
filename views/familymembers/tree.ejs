@@ -1,10 +1,15 @@
 <% layout('/layouts/boilerplate',{user})%>
 
 
+    <div class="container">
+        <div class="row">
+            <h1>
+                <%=familymember.first%>'s Family Tree
+            </h1>
+        </div>
+    </div>
 
-    <h1>
-        <%=familymember.first%>'s Family Tree
-    </h1>
+
 
     <% if (familymember.mother) { %>
         <div class="container">
@@ -69,5 +74,15 @@
                                             </a>
                                         </div>
                                         <% } %>
+                                </div>
+                            </div>
+                            <div class="container mt-5">
+                                <div class="row">
+                                    <div class="col">
+                                        <a href="/familymember/<%=familymember._id%>/new" class="btn btn-primary">Add a
+                                            new
+                                            family
+                                            member to this branch</a>
+                                    </div>
                                 </div>
                             </div>

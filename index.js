@@ -14,6 +14,7 @@ const userRoutes = require('./routes/user')
 const mongoose = require('mongoose');
 const dbUrl = process.env.DB_URL;
 const dbSessionSecret = process.env.DB_SESSION;
+const flash = require('connect-flash');
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
@@ -63,6 +64,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use('/javascripts', express.static(path.join(__dirname, 'public/javascripts')));
 app.use(session(sessionOptions));
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
@@ -70,8 +72,8 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;
-    // res.locals.success = req.flash('success');
-    // res.locals.error = req.flash('error');
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
     next();
 });
 app.use('/bootstrapcss', express.static(path.join(__dirname, "node_modules/bootstrap/dist/css")));
