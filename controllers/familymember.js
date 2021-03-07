@@ -1,6 +1,7 @@
 const Familymember = require('../models/familymember');
 const isFamilyMember = require('../utilities/userIsFamilyMember');
-const populateFamilyMembers = require('../utilities/populateFamilyMembers');
+const createNewMember = require('../utilities/createNewMember');
+
 
 module.exports.joinfamily = async (req, res) => {
     const user = req.user;
@@ -42,11 +43,8 @@ module.exports.renderNewMemberForm = async (req, res) => {
 module.exports.addNewMember = async (req, res) => {
     const user = req.user;
     const { id } = req.params;
+    await createNewMember(id, req.body.familymember);
     const familymember = await Familymember.findById(id).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
-    const { first, last, email, relationship } = req.body.familymember;
-    const newmember = new Familymember({ first, last, email, relationship });
-    const newmemberwithrelationships = await populateFamilyMembers(newmember, relationship, familymember);
-    console.log(newmember);
     res.render('familymembers/tree', { id, user, familymember });
 }
 

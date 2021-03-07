@@ -9,10 +9,7 @@ module.exports.renderRegForm = (req, res) => {
 module.exports.registerUser = async (req, res) => {
     try {
         const { username, password, first, last, email } = req.body.user;
-
         const user = new User({ username, first, last, email });
-        let member = await isFamilyMember(user);
-
         const regUser = await User.register(user, password);
         req.login(regUser, err => {
             if (err) return next(err);
