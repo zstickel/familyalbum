@@ -19,6 +19,10 @@ const userSchema = new Schema({
     familymember: {
         type: Schema.Types.ObjectId,
         ref: 'Familymember'
+    },
+    family: {
+        type: Schema.Types.ObjectId,
+        ref: 'Family'
     }
 })
 

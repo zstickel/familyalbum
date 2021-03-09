@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const dbUrl = 'mongodb://localhost:27017/family-album';
 const Familymember = require('../models/familymember');
-const User = require('../models/user')
+const User = require('../models/user');
+const Family = require('../models/family');
 
 
 mongoose.connect(dbUrl, {
@@ -19,6 +20,7 @@ db.once('open', () => {
 const seedDB = async () => {
     await User.deleteMany({});
     await Familymember.deleteMany({});
+    await Familymember.deleteMany({});
     let member = new Familymember({
         first: 'Bethany',
         last: 'Baker',
@@ -26,11 +28,17 @@ const seedDB = async () => {
     });
     await member.save();
     let id = member._id;
+    let family = new Family({ members: [id] });
+
+    await family.save();
+    const familyid = family._id;
+    member.family = familyid;
     let spouse = new Familymember({
         first: 'Zane',
         last: 'Stickel',
         email: 'zstickel@hotmail.com',
-        spouse: id
+        spouse: id,
+        family: familyid
     });
     await spouse.save();
     let spouseid = spouse._id;
@@ -41,14 +49,16 @@ const seedDB = async () => {
         last: 'Stickel',
         email: 'istickel@hotmail.com',
         mother: id,
-        father: spouseid
+        father: spouseid,
+        family: familyid
     });
     let childtwo = new Familymember({
         first: 'Selah',
         last: 'Stickel',
         email: 'sstickel@hotmail.com',
         mother: id,
-        father: spouseid
+        father: spouseid,
+        family: familyid
     });
     await childone.save();
     childoneid = childone._id;
@@ -64,6 +74,9 @@ const seedDB = async () => {
     spouse.children.push(childoneid);
     spouse.children.push(childtwoid);
     await spouse.save();
+    family.members.push(spouse._id, childone._id, childtwo._id);
+    await family.save();
+    console.log(member, spouse, childone, childtwo, family);
 
 }
 

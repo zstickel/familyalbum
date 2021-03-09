@@ -10,6 +10,14 @@ const familyMemberSchema = new Schema({
         type: String,
         required: [true, 'Must have a last name']
     },
+    userid: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    family: {
+        type: Schema.Types.ObjectId,
+        ref: 'Family'
+    },
     email: {
         type: String,
     },

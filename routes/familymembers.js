@@ -7,6 +7,9 @@ const familymember = require('../controllers/familymember');
 router.route('/joinfamily')
     .get(familymember.joinfamily);
 
+router.route('/:id/joinfamily')
+    .post(familymember.addtofamily);
+
 
 router.route('/:id/tree')
     .get(familymember.tree);

@@ -1,4 +1,5 @@
 const Familymember = require('../models/familymember');
+const Family = require('../models/family');
 const isFamilyMember = require('../utilities/userIsFamilyMember');
 const createNewMember = require('../utilities/createNewMember');
 
@@ -9,10 +10,34 @@ module.exports.joinfamily = async (req, res) => {
     res.render('familymembers/joinfamily', { member, user });
 }
 
+module.exports.addtofamily = async (req, res) => {
+    const answer = req.body.join;
+    const { id } = req.params;
+    console.log(answer);
+    console.log(id);
+    const user = req.user;
+    if (answer === 'join') {
+        const familymember = await Familymember.findById(id);
+        const family = await Family.findById(familymember.family);
+        familymember.userid = user._id;
+        user.family = family._id;
+        user.familymember = familymember._id;
+        await familymember.save();
+        await user.save();
+        console.log(familymember);
+        console.log(user);
+    }
+    else {
+
+    }
+    res.send('made it here');
+}
+
+
 module.exports.index = async (req, res) => {
     const user = req.user;
     const { id } = req.params;
-    const familymember = await (await Familymember.findOne({ 'first': user.first, 'last': user.last }).populate('spouse')).populate('children');
+    const familymember = await Familymember.findOne({ 'first': user.first, 'last': user.last }).populate('spouse').populate('children');
 
     res.render('familymembers/memberpage', { id, user });
 }
