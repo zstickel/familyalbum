@@ -17,20 +17,27 @@ module.exports.addtofamily = async (req, res) => {
     console.log(id);
     const user = req.user;
     if (answer === 'join') {
-        const familymember = await Familymember.findById(id);
+        const familymember = await Familymember.findById(id).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
         const family = await Family.findById(familymember.family);
         familymember.userid = user._id;
         user.family = family._id;
         user.familymember = familymember._id;
         await familymember.save();
         await user.save();
-        console.log(familymember);
-        console.log(user);
+        res.render('familymembers/tree', { id, user, familymember });
     }
     else {
-
+        const familymember = new Familymember({ first: user.first, last: user.last, email: user.email, userid: user._id });
+        await familymember.save();
+        const family = new Family([familymember._id]);
+        await family.save();
+        familymember.family = family._id;
+        await familymember.save();
+        user.family = family._id;
+        user.familymember = familymember._id;
+        await user.save();
+        res.render('familymembers/tree', { id, user, familymember });
     }
-    res.send('made it here');
 }
 
 
@@ -53,8 +60,8 @@ module.exports.tree = async (req, res) => {
 module.exports.mytree = async (req, res) => {
     const user = req.user;
     const { id } = req.params;
-    const familymember = await Familymember.findOne({ 'first': user.first, 'last': user.last }).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
-
+    const memberid = user.familymember;
+    const familymember = await Familymember.findOne(memberid).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
     res.render('familymembers/tree', { id, user, familymember });
 }
 
@@ -74,14 +81,3 @@ module.exports.addNewMember = async (req, res) => {
 }
 
 
-
-
-module.exports.login = (req, res) => {
-    const user = 'Bethany';
-    res.render('familymembers/login', { user })
-}
-
-module.exports.register = (req, res) => {
-    const user = 'Bethany';
-    res.render('familymembers/register', { user })
-}
