@@ -2,12 +2,20 @@ const Familymember = require('../models/familymember');
 const Family = require('../models/family');
 const isFamilyMember = require('../utilities/userIsFamilyMember');
 const createNewMember = require('../utilities/createNewMember');
+const { findById } = require('../models/familymember');
 
 
 module.exports.joinfamily = async (req, res) => {
     const user = req.user;
     let member = await isFamilyMember(user);
     res.render('familymembers/joinfamily', { member, user });
+}
+
+module.exports.albumpostinput = async (req, res) => {
+    const user = req.user;
+    const { id } = req.params;
+    const familymember = await Familymember.findById(id);
+    res.render('familymembers/albumnpost', { user, familymember });
 }
 
 module.exports.addtofamily = async (req, res) => {
@@ -43,8 +51,8 @@ module.exports.addtofamily = async (req, res) => {
 
 module.exports.index = async (req, res) => {
     const user = req.user;
-    const { id } = req.params;
-    const familymember = await Familymember.findOne({ 'first': user.first, 'last': user.last }).populate('spouse').populate('children');
+    const id = user.familymember;
+    const familymember = await Familymember.findById(id).populate('spouse').populate('children');
 
     res.render('familymembers/memberpage', { id, user });
 }
