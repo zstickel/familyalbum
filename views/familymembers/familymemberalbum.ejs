@@ -1,0 +1,15 @@
+<% layout('/layouts/boilerplate',{user})%>
+    <h1>
+        <%=familymember.first%>'s Memories
+    </h1>
+    <% for (let memory of familymember.memories) { %>
+        <div>
+            <%=memory.description%>
+        </div>
+        <div>
+            Posted by: <%=memory.poster.first%>
+                <%=memory.poster.last%>
+        </div>
+        <div>Date: <%=memory.date.toString()%>
+        </div>
+        <% } %>

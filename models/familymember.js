@@ -40,6 +40,10 @@ const familyMemberSchema = new Schema({
     children: [{
         type: Schema.Types.ObjectId,
         ref: 'Familymember'
+    }],
+    memories: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Memory'
     }]
 });
 

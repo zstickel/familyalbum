@@ -4,7 +4,7 @@ const Memory = require('../models/memory');
 const isFamilyMember = require('../utilities/userIsFamilyMember');
 const createNewMember = require('../utilities/createNewMember');
 const { findById } = require('../models/familymember');
-const moment = require('moment');
+
 
 
 module.exports.joinfamily = async (req, res) => {
@@ -24,14 +24,20 @@ module.exports.albumpostmemory = async (req, res) => {
     const { memorytext, date, file } = req.body;
     const { id } = req.params;
     const user = req.user;
-    const dateformat = moment(date).format();
-    console.log(dateformat);
-    const newdate = new Date(dateformat);
-    console.log(newdate.toString());
-    const memory = new Memory({ familymember: id, description: memorytext, date: newdate, user: user._id, })
-    console.log(memory);
-    console.log(memory.date.toString());
-    res.send('Made it here');
+    const userid = user._id;
+    let familymember = await Familymember.findById(id);
+    const memory = new Memory({ familymember: id, description: memorytext, date: date, poster: userid })
+    await memory.save();
+    familymember.memories.push(memory._id);
+    await familymember.save();
+    familymember = await Familymember.findById(id).populate({
+        path: 'memories',
+        populate: {
+            path: 'poster'
+        }
+    }).populate('poster');
+    console.log(familymember);
+    res.render('familymembers/familymemberalbum', { user, familymember });
 }
 
 module.exports.addtofamily = async (req, res) => {
@@ -66,9 +72,14 @@ module.exports.addtofamily = async (req, res) => {
 module.exports.index = async (req, res) => {
     const user = req.user;
     const id = user.familymember;
-    const familymember = await Familymember.findById(id).populate('spouse').populate('children');
+    const familymember = await Familymember.findById(id).populate({
+        path: 'memories',
+        populate: {
+            path: 'poster'
+        }
+    }).populate('poster');
 
-    res.render('familymembers/memberpage', { id, user });
+    res.render('familymembers/familymemberalbum', { id, user, familymember });
 }
 
 module.exports.tree = async (req, res) => {

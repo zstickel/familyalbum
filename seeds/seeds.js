@@ -3,6 +3,7 @@ const dbUrl = 'mongodb://localhost:27017/family-album';
 const Familymember = require('../models/familymember');
 const User = require('../models/user');
 const Family = require('../models/family');
+const Memory = require('../models/memory');
 
 
 mongoose.connect(dbUrl, {
@@ -21,6 +22,7 @@ const seedDB = async () => {
     await User.deleteMany({});
     await Familymember.deleteMany({});
     await Familymember.deleteMany({});
+    await Memory.deleteMany({});
     let member = new Familymember({
         first: 'Bethany',
         last: 'Baker',
