@@ -18,7 +18,8 @@ router.route('/:id/mytree')
     .get(familymember.mytree);
 
 router.route('/:id/albumpost')
-    .get(familymember.albumpostinput);
+    .get(familymember.albumpostinput)
+    .post(familymember.albumpostmemory);
 
 router.route('/:id/new')
     .get(familymember.renderNewMemberForm)

@@ -4,22 +4,25 @@
         <h1 class="text-center">Post a memory of <%=familymember.first%>
         </h1>
         <div class="col-6 offset-3">
-            <form>
+            <form action="/familymember/<%=familymember._id%>/albumpost" method="POST" class="needs-validation"
+                novalidate>
                 <div class="form-group">
                     <label for="memorytext">Describe your memory:</label>
-                    <textarea name="memorytext" id="memorytext" class="form-control" rows="5"></textarea>
+                    <textarea name="memorytext" id="memorytext" class="form-control" rows="5" required></textarea>
                 </div>
                 <div class="form-group">
                     <label for="date">When did this memory occur?</label>
-                    <input type="date" id="date" class="form-control">
+                    <input type="date" name="date" id="date" class="form-control" required>
 
                 </div>
                 <div class="form-group">
                     <label for="formFile" class="form-label">Add a picture</label>
-                    <input class="form-control" type="file" id="formFile">
+                    <input class="form-control" name="file" type="file" id="formFile">
                 </div>
 
                 <button type="submit" class="btn btn-primary mt-3">Submit</button>
             </form>
         </div>
     </div>
+
+    <script src="/javascripts/formvalidation.js"></script>

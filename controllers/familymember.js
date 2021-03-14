@@ -1,8 +1,10 @@
 const Familymember = require('../models/familymember');
 const Family = require('../models/family');
+const Memory = require('../models/memory');
 const isFamilyMember = require('../utilities/userIsFamilyMember');
 const createNewMember = require('../utilities/createNewMember');
 const { findById } = require('../models/familymember');
+const moment = require('moment');
 
 
 module.exports.joinfamily = async (req, res) => {
@@ -18,11 +20,23 @@ module.exports.albumpostinput = async (req, res) => {
     res.render('familymembers/albumnpost', { user, familymember });
 }
 
+module.exports.albumpostmemory = async (req, res) => {
+    const { memorytext, date, file } = req.body;
+    const { id } = req.params;
+    const user = req.user;
+    const dateformat = moment(date).format();
+    console.log(dateformat);
+    const newdate = new Date(dateformat);
+    console.log(newdate.toString());
+    const memory = new Memory({ familymember: id, description: memorytext, date: newdate, user: user._id, })
+    console.log(memory);
+    console.log(memory.date.toString());
+    res.send('Made it here');
+}
+
 module.exports.addtofamily = async (req, res) => {
     const answer = req.body.join;
     const { id } = req.params;
-    console.log(answer);
-    console.log(id);
     const user = req.user;
     if (answer === 'join') {
         const familymember = await Familymember.findById(id).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
@@ -60,7 +74,6 @@ module.exports.index = async (req, res) => {
 module.exports.tree = async (req, res) => {
     const user = req.user;
     const { id } = req.params;
-    console.log(id);
     const familymember = await Familymember.findById(id).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
     res.render('familymembers/tree', { id, user, familymember });
 }

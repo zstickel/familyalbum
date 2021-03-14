@@ -37,7 +37,6 @@ module.exports.renderLoginForm = (req, res) => {
 module.exports.loginUser = (req, res) => {
     const authedUser = req.user.first;
     const user = req.user;
-    console.log(user);
     res.redirect('/');
 }
 
