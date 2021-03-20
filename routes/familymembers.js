@@ -21,6 +21,9 @@ router.route('/:id/albumpost')
     .get(familymember.albumpostinput)
     .post(familymember.albumpostmemory);
 
+router.route('/:id/album')
+    .get(familymember.album);
+
 router.route('/:id/new')
     .get(familymember.renderNewMemberForm)
     .post(familymember.addNewMember)

@@ -1,5 +1,5 @@
 const Familymember = require('../models/familymember');
-const updateMember = require('../utilities/updateMember')
+const newMemberPossibleConnections = require('./newMemberPossibleConnections')
 
 module.exports = async function createNewMember(rootmemberid, params) {
     const { first, last, email, relationship } = params;
@@ -36,6 +36,7 @@ module.exports = async function createNewMember(rootmemberid, params) {
             rootmember.siblings.push(newMember._id);
             await rootmember.save();
     }
-    console.log(newMember);
-    console.log(rootmember);
+    const possibleConnections = await newMemberPossibleConnections(newMember, rootmemberid, relationship);
+    console.log(possibleConnections);
+
 }

@@ -40,6 +40,19 @@ module.exports.albumpostmemory = async (req, res) => {
     res.render('familymembers/familymemberalbum', { user, familymember });
 }
 
+module.exports.album = async (req, res) => {
+    const user = req.user;
+    const { id } = req.params;
+    const familymember = await Familymember.findById(id).populate({
+        path: 'memories',
+        populate: {
+            path: 'poster'
+        }
+    }).populate('poster');
+
+    res.render('familymembers/familymemberalbum', { id, user, familymember });
+}
+
 module.exports.addtofamily = async (req, res) => {
     const answer = req.body.join;
     const { id } = req.params;
