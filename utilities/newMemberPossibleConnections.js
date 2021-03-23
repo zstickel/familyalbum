@@ -4,6 +4,7 @@ const Familymember = require('../models/familymember');
 
 module.exports = async function newMemberPossibleConnnections(familymember, rootmemberid, relationship) {
     let possibleConnections = {
+        member: familymember,
         mother: null,
         father: null,
         spouse: null,
@@ -12,15 +13,21 @@ module.exports = async function newMemberPossibleConnnections(familymember, root
     };
     let rootmember = await Familymember.findById(rootmemberid);
     if (relationship === "Mother") {
-        possibleConnections.spouse = rootmember.father;
-        for (let sibling of rootmember.siblings) {
-            possibleConnections.children.push(sibling);
+        if (rootmember.father) possibleConnections.spouse = await Familymember.findById(rootmember.father);
+        if (rootmember.siblings) {
+            for (let siblingid of rootmember.siblings) {
+                const sibling = await Familymember.findById(siblingid);
+                possibleConnections.children.push(sibling);
+            }
         }
     }
     if (relationship === "Father") {
-        possibleConnections.spouse = rootmember.mother;
-        for (let sibling of rootmember.siblings) {
-            possibleConnections.children.push(sibling);
+        if (rootmember.mother) possibleConnections.spouse = await Familymember.findById(rootmember.mother);
+        if (rootmember.siblings) {
+            for (let siblingid of rootmember.siblings) {
+                const sibling = await Familymember.findById(siblingid);
+                possibleConnections.children.push(sibling);
+            }
         }
     }
     return possibleConnections;

@@ -120,9 +120,9 @@ module.exports.renderNewMemberForm = async (req, res) => {
 module.exports.addNewMember = async (req, res) => {
     const user = req.user;
     const { id } = req.params;
-    await createNewMember(id, req.body.familymember);
+    const possibleConnections = await createNewMember(id, req.body.familymember);
     const familymember = await Familymember.findById(id).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
-    res.render('familymembers/tree', { id, user, familymember });
+    res.render('familymembers/checkconnections', { id, user, familymember, possibleConnections });
 }
 
 
