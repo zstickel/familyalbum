@@ -36,7 +36,7 @@ module.exports.albumpostmemory = async (req, res) => {
             path: 'poster'
         }
     }).populate('poster');
-    console.log(familymember);
+
     res.render('familymembers/familymemberalbum', { user, familymember });
 }
 
@@ -123,6 +123,30 @@ module.exports.addNewMember = async (req, res) => {
     const possibleConnections = await createNewMember(id, req.body.familymember);
     const familymember = await Familymember.findById(id).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
     res.render('familymembers/checkconnections', { id, user, familymember, possibleConnections });
+}
+
+
+module.exports.checkConnectionsandUpdate = async (req, res) => {
+    const { id } = req.params;
+    let spouse;
+    const familymember = await Familymember.findById(id);
+    const entirefam = req.body;
+    let startsWithChild = /^child/;
+    for (const property in entirefam) {
+        if (startsWithChild.test(property)) {
+            let child = JSON.parse(entirefam[property]);
+            familymember.children.push(child._id);
+        }
+    }
+
+    if (req.body.spouse) {
+        spouse = JSON.parse(req.body.spouse);
+
+        familymember.spouse = spouse._id;
+    }
+    await familymember.save();
+
+    res.send('Made it here believe it or not!!');
 }
 
 

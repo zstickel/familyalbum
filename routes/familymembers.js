@@ -10,6 +10,8 @@ router.route('/joinfamily')
 router.route('/:id/joinfamily')
     .post(familymember.addtofamily);
 
+router.route('/:id/checkconnections')
+    .post(familymember.checkConnectionsandUpdate);
 
 router.route('/:id/tree')
     .get(familymember.tree);

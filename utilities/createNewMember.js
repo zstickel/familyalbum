@@ -37,7 +37,7 @@ module.exports = async function createNewMember(rootmemberid, params) {
             await rootmember.save();
     }
     const possibleConnections = await newMemberPossibleConnections(newMember, rootmemberid, relationship);
-    console.log(possibleConnections);
+
     return possibleConnections;
 
 }

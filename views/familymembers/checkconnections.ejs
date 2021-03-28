@@ -1,13 +1,49 @@
 <% layout('/layouts/boilerplate',{user})%>
 
-    <% if(possibleConnections.spouse){ %>
-        <div>Is <%=possibleConnections.spouse.first%>
-                <%=possibleConnections.member.first%>'s Spouse?</div>
-        <% }%>
 
-            <% if (possibleConnections.children) { %>
-                <% for (let child of possibleConnections.children){ %>
-                    <div>Is <%=child.first%>
-                            <%=possibleConnections.member.first%>'s Child?</div>
-                    <% } %>
-                        <%} %>
+    <form action="/familymember/<%=possibleConnections.member._id%>/checkconnections" method="POST">
+        <% if(possibleConnections.spouse){ %>
+            <div>Is <%=possibleConnections.spouse.first%>
+                    <%=possibleConnections.member.first%>'s Spouse?</div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="spouse" id="spouseyes"
+                    value="<%=JSON.stringify(possibleConnections.spouse)%>" checked>
+                <label class="form-check-label" for="spouseyes">
+                    Yes, that's <%=possibleConnections.member.first%>'s spouse!
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="spouse" id="spouseno" value="no">
+                <label class="form-check-label" for="spouseno">
+                    That's not <%=possibleConnections.member.first%>'s spouse.
+                </label>
+            </div>
+            <% }%>
+
+                <% if (possibleConnections.children) { %>
+                    <% let childNumber=1;%>
+                        <% for (let child of possibleConnections.children){ %>
+
+                            <div>Is <%=child.first%>
+                                    <%=possibleConnections.member.first%>'s Child?</div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="child<%=childNumber.toString();%>"
+                                    id="childyes<%=childNumber%>" value="<%=JSON.stringify(child)%>" checked>
+                                <label class="form-check-label" for="childyes<%=childNumber%>">
+                                    Yes, that's <%=possibleConnections.member.first%>'s child!
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="child<%=childNumber.toString()%>"
+                                    id="childno<%=childNumber%>" value="no">
+                                <label class="form-check-label" for="childno<%=childNumber%>">
+                                    That's not <%=possibleConnections.member.first%>'s child.
+                                </label>
+                            </div>
+                            <% childNumber++; } %>
+                                <%} %>
+
+
+                                    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </form>
+    </div>
