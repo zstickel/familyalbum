@@ -1,7 +1,9 @@
 <% layout('/layouts/boilerplate',{user})%>
 
 
-    <form action="/familymember/<%=possibleConnections.member._id%>/checkconnections" method="POST">
+    <form
+        action="/familymember/<%=possibleConnections.member._id%>/checkconnections/<%=possibleConnections.relationship%>"
+        method="POST">
         <% if(possibleConnections.spouse){ %>
             <div>Is <%=possibleConnections.spouse.first%>
                     <%=possibleConnections.member.first%>'s Spouse?</div>
@@ -20,30 +22,103 @@
             </div>
             <% }%>
 
-                <% if (possibleConnections.children) { %>
-                    <% let childNumber=1;%>
-                        <% for (let child of possibleConnections.children){ %>
+                <% if(possibleConnections.mother){ %>
+                    <div>Is <%=possibleConnections.mother.first%>
+                            <%=possibleConnections.member.first%>'s Mother?</div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mother" id="motheryes"
+                            value="<%=JSON.stringify(possibleConnections.mother)%>" checked>
+                        <label class="form-check-label" for="spouseyes">
+                            Yes, that's <%=possibleConnections.member.first%>'s mother!
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mother" id="motherno" value="no">
+                        <label class="form-check-label" for="spouseno">
+                            That's not <%=possibleConnections.member.first%>'s mother.
+                        </label>
+                    </div>
+                    <% }%>
 
-                            <div>Is <%=child.first%>
-                                    <%=possibleConnections.member.first%>'s Child?</div>
+                        <% if(possibleConnections.father){ %>
+                            <div>Is <%=possibleConnections.father.first%>
+                                    <%=possibleConnections.member.first%>'s Father?</div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="child<%=childNumber.toString();%>"
-                                    id="childyes<%=childNumber%>" value="<%=JSON.stringify(child)%>" checked>
-                                <label class="form-check-label" for="childyes<%=childNumber%>">
-                                    Yes, that's <%=possibleConnections.member.first%>'s child!
+                                <input class="form-check-input" type="radio" name="father" id="fatheryes"
+                                    value="<%=JSON.stringify(possibleConnections.father)%>" checked>
+                                <label class="form-check-label" for="fatheryes">
+                                    Yes, that's <%=possibleConnections.member.first%>'s father!
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="child<%=childNumber.toString()%>"
-                                    id="childno<%=childNumber%>" value="no">
-                                <label class="form-check-label" for="childno<%=childNumber%>">
-                                    That's not <%=possibleConnections.member.first%>'s child.
+                                <input class="form-check-input" type="radio" name="father" id="fatherno" value="no">
+                                <label class="form-check-label" for="fatherno">
+                                    That's not <%=possibleConnections.member.first%>'s father.
                                 </label>
                             </div>
-                            <% childNumber++; } %>
-                                <%} %>
+                            <% }%>
 
 
-                                    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+
+                                <% if (possibleConnections.children) { %>
+                                    <% let childNumber=1;%>
+                                        <% for (let child of possibleConnections.children){ %>
+
+                                            <div>Is <%=child.first%>
+                                                    <%=possibleConnections.member.first%>'s Child?</div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="child<%=childNumber.toString();%>"
+                                                    id="childyes<%=childNumber%>" value="<%=JSON.stringify(child)%>"
+                                                    checked>
+                                                <label class="form-check-label" for="childyes<%=childNumber%>">
+                                                    Yes, that's <%=possibleConnections.member.first%>'s child!
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="child<%=childNumber.toString()%>" id="childno<%=childNumber%>"
+                                                    value="no">
+                                                <label class="form-check-label" for="childno<%=childNumber%>">
+                                                    That's not <%=possibleConnections.member.first%>'s child.
+                                                </label>
+                                            </div>
+                                            <% childNumber++; } %>
+                                                <%} %>
+                                                    <% if (possibleConnections.siblings) { %>
+                                                        <% let siblingNumber=1;%>
+                                                            <% for (let sibling of possibleConnections.siblings){ %>
+
+                                                                <div>Is <%=sibling.first%>
+                                                                        <%=possibleConnections.member.first%>'s Sibling?
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="sibling<%=siblingNumber.toString();%>"
+                                                                        id="siblingyes<%=siblingNumber%>"
+                                                                        value="<%=JSON.stringify(sibling)%>" checked>
+                                                                    <label class="form-check-label"
+                                                                        for="siblingyes<%=siblingNumber%>">
+                                                                        Yes, that's
+                                                                        <%=possibleConnections.member.first%>'s
+                                                                            sibling!
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="sibling<%=siblingNumber.toString()%>"
+                                                                        id="siblingno<%=siblingNumber%>" value="no">
+                                                                    <label class="form-check-label"
+                                                                        for="siblingno<%=siblingNumber%>">
+                                                                        That's not <%=possibleConnections.member.first%>
+                                                                            's
+                                                                            sibling.
+                                                                    </label>
+                                                                </div>
+                                                                <% siblingNumber++; } %>
+                                                                    <%} %>
+
+                                                                        <button type="submit"
+                                                                            class="btn btn-primary mt-2">Submit</button>
     </form>
     </div>

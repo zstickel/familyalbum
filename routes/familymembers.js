@@ -10,7 +10,7 @@ router.route('/joinfamily')
 router.route('/:id/joinfamily')
     .post(familymember.addtofamily);
 
-router.route('/:id/checkconnections')
+router.route('/:id/checkconnections/:relationship')
     .post(familymember.checkConnectionsandUpdate);
 
 router.route('/:id/tree')

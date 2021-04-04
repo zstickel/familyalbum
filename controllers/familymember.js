@@ -122,31 +122,75 @@ module.exports.addNewMember = async (req, res) => {
     const { id } = req.params;
     const possibleConnections = await createNewMember(id, req.body.familymember);
     const familymember = await Familymember.findById(id).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
-    res.render('familymembers/checkconnections', { id, user, familymember, possibleConnections });
+    if (possibleConnections.newConnections === true) {
+        res.render('familymembers/checkconnections', { id, user, familymember, possibleConnections });
+    }
+    else {
+        res.render('familymembers/tree', { id, user, familymember });
+    }
 }
 
 
 module.exports.checkConnectionsandUpdate = async (req, res) => {
-    const { id } = req.params;
+    const { id, relationship } = req.params;
+    const user = req.user;
     let spouse;
-    const familymember = await Familymember.findById(id);
+    let mother;
+    let father;
+    let familymember = await Familymember.findById(id);
     const entirefam = req.body;
     let startsWithChild = /^child/;
+    let startsWithSibling = /^sibling/;
     for (const property in entirefam) {
         if (startsWithChild.test(property)) {
+
             let child = JSON.parse(entirefam[property]);
+            const childMember = await Familymember.findById(child._id);
+            if (relationship === "Father") {
+                childMember.father = familymember._id;
+            } else {
+                childMember.mother = familymember._id;
+            }
+            await childMember.save();
             familymember.children.push(child._id);
+        }
+        if (startsWithSibling.test(property)) {
+            let sibling = JSON.parse(entirefam[property]);
+            const siblingMember = await Familymember.findById(sibling._id);
+            siblingMember.siblings.push(familymember._id);
+            await siblingMember.save();
+            familymember.siblings.push(sibling._id);
         }
     }
 
     if (req.body.spouse) {
         spouse = JSON.parse(req.body.spouse);
-
+        const spouseMember = await Familymember.findById(spouse._id);
+        spouseMember.spouse = familymember._id;
+        await spouseMember.save();
         familymember.spouse = spouse._id;
     }
-    await familymember.save();
+    if (req.body.mother) {
+        mother = JSON.parse(req.body.mother);
+        const motherMember = await Familymember.findById(mother._id);
+        motherMember.children.push(familymember._id);
+        await motherMember.save();
+        familymember.mother = mother._id;
+    }
+    if (req.body.father) {
+        father = JSON.parse(req.body.father);
+        const fatherMember = await Familymember.findById(father._id);
+        fatherMember.children.push(familymember._id);
+        await fatherMember.save();
+        familymember.father = father._id;
+    }
 
-    res.send('Made it here believe it or not!!');
+
+
+    await familymember.save();
+    familymember = await Familymember.findById(id).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
+
+    res.render('familymembers/tree', { id, user, familymember });
 }
 
 
