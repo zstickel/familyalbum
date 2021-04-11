@@ -145,44 +145,54 @@ module.exports.checkConnectionsandUpdate = async (req, res) => {
         if (startsWithChild.test(property)) {
 
             let child = JSON.parse(entirefam[property]);
-            const childMember = await Familymember.findById(child._id);
-            if (relationship === "Father") {
-                childMember.father = familymember._id;
-            } else {
-                childMember.mother = familymember._id;
+            if (!child.answer) {
+                const childMember = await Familymember.findById(child._id);
+                if (relationship === "Father") {
+                    childMember.father = familymember._id;
+                } else {
+                    childMember.mother = familymember._id;
+                }
+                await childMember.save();
+                familymember.children.push(child._id);
             }
-            await childMember.save();
-            familymember.children.push(child._id);
         }
         if (startsWithSibling.test(property)) {
             let sibling = JSON.parse(entirefam[property]);
-            const siblingMember = await Familymember.findById(sibling._id);
-            siblingMember.siblings.push(familymember._id);
-            await siblingMember.save();
-            familymember.siblings.push(sibling._id);
+            if (!sibling.answer) {
+                const siblingMember = await Familymember.findById(sibling._id);
+                siblingMember.siblings.push(familymember._id);
+                await siblingMember.save();
+                familymember.siblings.push(sibling._id);
+            }
         }
     }
 
     if (req.body.spouse) {
         spouse = JSON.parse(req.body.spouse);
-        const spouseMember = await Familymember.findById(spouse._id);
-        spouseMember.spouse = familymember._id;
-        await spouseMember.save();
-        familymember.spouse = spouse._id;
+        if (!spouse.answer) {
+            const spouseMember = await Familymember.findById(spouse._id);
+            spouseMember.spouse = familymember._id;
+            await spouseMember.save();
+            familymember.spouse = spouse._id;
+        }
     }
     if (req.body.mother) {
         mother = JSON.parse(req.body.mother);
-        const motherMember = await Familymember.findById(mother._id);
-        motherMember.children.push(familymember._id);
-        await motherMember.save();
-        familymember.mother = mother._id;
+        if (!mother.answer) {
+            const motherMember = await Familymember.findById(mother._id);
+            motherMember.children.push(familymember._id);
+            await motherMember.save();
+            familymember.mother = mother._id;
+        }
     }
     if (req.body.father) {
         father = JSON.parse(req.body.father);
-        const fatherMember = await Familymember.findById(father._id);
-        fatherMember.children.push(familymember._id);
-        await fatherMember.save();
-        familymember.father = father._id;
+        if (!father.answer) {
+            const fatherMember = await Familymember.findById(father._id);
+            fatherMember.children.push(familymember._id);
+            await fatherMember.save();
+            familymember.father = father._id;
+        }
     }
 
 

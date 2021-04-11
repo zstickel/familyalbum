@@ -15,7 +15,8 @@
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="spouse" id="spouseno" value="no">
+                <input class="form-check-input" type="radio" name="spouse" id="spouseno"
+                    value="<%=JSON.stringify({answer:" no"})%>">
                 <label class="form-check-label" for="spouseno">
                     That's not <%=possibleConnections.member.first%>'s spouse.
                 </label>
@@ -33,7 +34,8 @@
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mother" id="motherno" value="no">
+                        <input class="form-check-input" type="radio" name="mother" id="motherno"
+                            value="<%=JSON.stringify({answer:" no"})%>">
                         <label class="form-check-label" for="spouseno">
                             That's not <%=possibleConnections.member.first%>'s mother.
                         </label>
@@ -51,7 +53,8 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="father" id="fatherno" value="no">
+                                <input class="form-check-input" type="radio" name="father" id="fatherno"
+                                    value="<%=JSON.stringify({answer:" no"})%>">
                                 <label class="form-check-label" for="fatherno">
                                     That's not <%=possibleConnections.member.first%>'s father.
                                 </label>
@@ -78,7 +81,7 @@
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio"
                                                     name="child<%=childNumber.toString()%>" id="childno<%=childNumber%>"
-                                                    value="no">
+                                                    value="<%=JSON.stringify({answer:" no"})%>">
                                                 <label class="form-check-label" for="childno<%=childNumber%>">
                                                     That's not <%=possibleConnections.member.first%>'s child.
                                                 </label>
@@ -107,7 +110,8 @@
                                                                 <div class="form-check">
                                                                     <input class="form-check-input" type="radio"
                                                                         name="sibling<%=siblingNumber.toString()%>"
-                                                                        id="siblingno<%=siblingNumber%>" value="no">
+                                                                        id="siblingno<%=siblingNumber%>"
+                                                                        value="<%=JSON.stringify({answer:" no"})%>">
                                                                     <label class="form-check-label"
                                                                         for="siblingno<%=siblingNumber%>">
                                                                         That's not <%=possibleConnections.member.first%>
