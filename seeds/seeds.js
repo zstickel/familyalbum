@@ -4,6 +4,8 @@ const Familymember = require('../models/familymember');
 const User = require('../models/user');
 const Family = require('../models/family');
 const Memory = require('../models/memory');
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3();
 
 
 mongoose.connect(dbUrl, {
@@ -17,6 +19,24 @@ db.on('error', console.error.bind(console, "connection error:"));
 db.once('open', () => {
     console.log('Database connected');
 })
+
+const emptyBucket = async () => {
+
+    const { Contents } = await s3.listObjects({ Bucket: "zanefamilyalbum" }).promise();
+    if (Contents.length > 0) {
+        await s3
+            .deleteObjects({
+                Bucket: "zanefamilyalbum",
+                Delete: {
+                    Objects: Contents.map(({ Key }) => ({ Key }))
+                }
+            })
+            .promise();
+    }
+    const { newContents } = await s3.listObjects({ Bucket: "zanefamilyalbum" }).promise();
+    console.log(newContents);
+
+}
 
 const seedDB = async () => {
     await User.deleteMany({});
@@ -81,7 +101,7 @@ const seedDB = async () => {
     console.log(member, spouse, childone, childtwo, family);
 
 }
-
+emptyBucket();
 seedDB().then(() => {
     mongoose.connection.close();
 });
