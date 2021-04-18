@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const familymember = require('../controllers/familymember');
+const upload = require('../utilities/multerupload');
 
 
 
@@ -21,7 +22,7 @@ router.route('/:id/mytree')
 
 router.route('/:id/albumpost')
     .get(familymember.albumpostinput)
-    .post(familymember.albumpostmemory);
+    .post(upload.single('file'), familymember.albumpostmemory);
 
 router.route('/:id/album')
     .get(familymember.album);

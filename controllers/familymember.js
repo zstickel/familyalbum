@@ -4,6 +4,7 @@ const Memory = require('../models/memory');
 const isFamilyMember = require('../utilities/userIsFamilyMember');
 const createNewMember = require('../utilities/createNewMember');
 const { findById } = require('../models/familymember');
+const upload = require('../utilities/multerupload');
 
 
 
@@ -22,11 +23,17 @@ module.exports.albumpostinput = async (req, res) => {
 
 module.exports.albumpostmemory = async (req, res) => {
     const { memorytext, date, file } = req.body;
+
     const { id } = req.params;
     const user = req.user;
     const userid = user._id;
+    const { location, bucket, key } = req.file;
     let familymember = await Familymember.findById(id);
-    const memory = new Memory({ familymember: id, description: memorytext, date: date, poster: userid })
+    const memory = new Memory({
+        familymember: id, description: memorytext, date: date, poster: userid,
+        image: { url: location, bucket: bucket, key, key }
+    });
+
     await memory.save();
     familymember.memories.push(memory._id);
     await familymember.save();
