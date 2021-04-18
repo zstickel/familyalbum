@@ -31,7 +31,7 @@ module.exports.albumpostmemory = async (req, res) => {
     let familymember = await Familymember.findById(id);
     const memory = new Memory({
         familymember: id, description: memorytext, date: date, poster: userid,
-        image: { url: location, bucket: bucket, key, key }
+        image: { url: location, bucket: bucket, key: key }
     });
 
     await memory.save();
