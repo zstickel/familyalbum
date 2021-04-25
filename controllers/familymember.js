@@ -6,6 +6,7 @@ const createNewMember = require('../utilities/createNewMember');
 const { findById } = require('../models/familymember');
 const upload = require('../utilities/multerupload');
 const aws = require("aws-sdk");
+const { none } = require('../utilities/multerupload');
 const s3 = new aws.S3();
 
 
@@ -55,20 +56,19 @@ module.exports.albumpostmemory = async (req, res) => {
         }
     }).populate('poster');
 
-    let params = { Bucket: "", Key: "" };
-    let signedUrlArray = [];
-    let signedUrl;
-    for (let memory of familymember.memories) {
+
+    let signedUrlArray = familymember.memories.map(memory => {
+        let params = { Bucket: "", Key: "" };
         if (memory.image.url) {
             params.Key = memory.image.key;
             params.Bucket = memory.image.bucket;
-            signedUrl = s3.getSignedUrl('getObject', params);
-            signedUrlArray.push(signedUrl);
+            return s3.getSignedUrl('getObject', params);
         }
         else {
-            signedUrlArray.push("none");
+            return "none";
         }
-    }
+    })
+
 
     res.render('familymembers/familymemberalbum', { user, familymember, signedUrlArray });
 }
@@ -84,21 +84,17 @@ module.exports.album = async (req, res) => {
             path: 'poster'
         }
     }).populate('poster');
-    let params = { Bucket: "", Key: "" };
-    let signedUrlArray = [];
-    let signedUrl;
-    for (let memory of familymember.memories) {
+    let signedUrlArray = familymember.memories.map(memory => {
+        let params = { Bucket: "", Key: "" };
         if (memory.image.url) {
             params.Key = memory.image.key;
             params.Bucket = memory.image.bucket;
-            signedUrl = s3.getSignedUrl('getObject', params);
-            signedUrlArray.push(signedUrl);
+            return s3.getSignedUrl('getObject', params);
         }
         else {
-            signedUrlArray.push("none");
+            return "none";
         }
-    }
-
+    })
 
     res.render('familymembers/familymemberalbum', { id, user, familymember, signedUrlArray });
 }
@@ -141,20 +137,17 @@ module.exports.index = async (req, res) => {
             path: 'poster'
         }
     }).populate('poster');
-    let params = { Bucket: "", Key: "" };
-    let signedUrlArray = [];
-    let signedUrl;
-    for (let memory of familymember.memories) {
+    let signedUrlArray = familymember.memories.map(memory => {
+        let params = { Bucket: "", Key: "" };
         if (memory.image.url) {
             params.Key = memory.image.key;
             params.Bucket = memory.image.bucket;
-            signedUrl = s3.getSignedUrl('getObject', params);
-            signedUrlArray.push(signedUrl);
+            return s3.getSignedUrl('getObject', params);
         }
         else {
-            signedUrlArray.push("none");
+            return "none";
         }
-    }
+    })
 
     res.render('familymembers/familymemberalbum', { id, user, familymember, signedUrlArray });
 }
