@@ -6,28 +6,33 @@
     </div>
     <div class="container">
         <div class="row row-flex g-3">
+            <%let memnumber=0; %>
+                <% for (let memory of familymember.memories) { %>
 
-            <% for (let memory of familymember.memories) { %>
+                    <div class="col-sm-6">
+                        <div class="border border-primary border-3 p-3">
+                            <div class="row">
+                                <h5>
+                                    <%=memory.description%>
+                                </h5>
+                            </div>
+                            <div class="row">
 
-                <div class="col-sm-6">
-                    <div class="border border-primary border-3 p-3">
-                        <div class="row">
-                            <h5>
-                                <%=memory.description%>
-                            </h5>
+                                Posted by: <%=memory.poster.first%>
+                                    <%=memory.poster.last%>
+
+                            </div>
+                            <div class="row">Date: <%=memory.date.toString()%>
+                            </div>
+                            <%if (signedUrlArray[memnumber]!=="none" ) {%>
+                                <div class="row"><img src="<%=signedUrlArray[memnumber]%>"></img></div>
                         </div>
-                        <div class="row">
 
-                            Posted by: <%=memory.poster.first%>
-                                <%=memory.poster.last%>
-
-                        </div>
-                        <div class="row">Date: <%=memory.date.toString()%>
-                        </div>
+                        <% } %>
                     </div>
-                </div>
-
-                <% } %>
-
         </div>
+
+        <%memnumber++; } %>
+
+    </div>
     </div>
