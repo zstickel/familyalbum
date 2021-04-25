@@ -37,12 +37,13 @@ module.exports.renderLoginForm = (req, res) => {
 module.exports.loginUser = (req, res) => {
     const authedUser = req.user.first;
     const user = req.user;
+    req.flash('success', `Welcome back ${authedUser}!`);
     res.redirect('/');
 }
 
 module.exports.logOut = (req, res) => {
     const authedUser = req.user.first;
     req.logout();
-    //    req.flash('success', `Good Bye ${authedUser}!`);
+    req.flash('success', `Good Bye ${authedUser}!`);
     res.redirect('/')
 }

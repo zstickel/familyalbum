@@ -13,13 +13,13 @@
     <body>
 
         <%- include('../partials/navbar',{user})%>
+            <%- include('../partials/flash')%>
+                <main>
 
-            <main>
+                    <%- body %>
 
-                <%- body %>
-
-            </main>
-            <script src="/bootstrapjs/bootstrap.min.js"></script>
+                </main>
+                <script src="/bootstrapjs/bootstrap.min.js"></script>
 
     </body>
 
