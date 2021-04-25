@@ -28,7 +28,7 @@ const User = require('./models/user')
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const MongoStore = require('connect-mongo').default;
+const MongoStore = require('connect-mongo');
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     secret: dbSessionSecret,
