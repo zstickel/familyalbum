@@ -87,8 +87,9 @@ app.use(cookieParser(cookieSecret));
 
 
 app.get('/', (req, res) => {
+    const page = "home";
     const user = req.user;
-    res.render('home', { user });
+    res.render('home', { user, page });
 });
 
 app.use((err, req, res, next) => {

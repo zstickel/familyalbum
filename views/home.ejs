@@ -1,11 +1,28 @@
 <% layout('/layouts/boilerplate',{user})%>
-    <div class="container-fluid text-center">
-        <% if (user) { %>
-            <h1> Welcome to <%=user.first%>'s Family Album Home Page! </h1>
-            <%} else {%>
-                <h1>Welcome to the Family Album home page. </h1>
-                <h2>Please register or login!</h2>
-                <% } %>
+    <style>
+        body,
+        html,
+        main {
+            height: 100%;
 
+        }
 
+        .bgimg {
+            background-image: url("https://zanefamilyalbumstock.s3.amazonaws.com/tyler-nix-V3dHmb1MOXM-unsplash+(1).jpg");
+            height: 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+    </style>
+    <div class="bgimg">
+        <div class="family container-fluid text-center text-white">
+            <% if (user) { %>
+                <h1 class="display-1"> Welcome to <%=user.first%>'s Family Album Home Page! </h1>
+                <%} else {%>
+                    <h1 class="display-1">Welcome to the Family Album. </h1>
+                    <h2 class="display-3">Please register or login!</h2>
+                    <% } %>
+
+        </div>
     </div>

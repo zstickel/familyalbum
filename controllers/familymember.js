@@ -130,6 +130,7 @@ module.exports.addtofamily = async (req, res) => {
 
 module.exports.index = async (req, res) => {
     const user = req.user;
+    const page = "main";
     const id = user.familymember;
     const familymember = await Familymember.findById(id).populate({
         path: 'memories',
@@ -149,7 +150,7 @@ module.exports.index = async (req, res) => {
         }
     })
 
-    res.render('familymembers/familymemberalbum', { id, user, familymember, signedUrlArray });
+    res.render('familymembers/familymemberalbum', { id, user, familymember, signedUrlArray, page });
 }
 
 module.exports.tree = async (req, res) => {

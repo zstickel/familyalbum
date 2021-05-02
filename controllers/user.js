@@ -3,7 +3,8 @@ const isFamilyMember = require('../utilities/userIsFamilyMember');
 
 module.exports.renderRegForm = (req, res) => {
     const user = req.user;
-    res.render('users/register', { user });
+    const page = "register";
+    res.render('users/register', { user, page });
 }
 
 module.exports.registerUser = async (req, res) => {
