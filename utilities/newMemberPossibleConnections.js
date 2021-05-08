@@ -40,6 +40,7 @@ module.exports = async function newMemberPossibleConnnections(familymember, root
             }
         }
     }
+
     if (relationship === "Sibling") {
         if (rootmember.mother) {
             possibleConnections.mother = await Familymember.findById(rootmember.mother);
@@ -58,10 +59,35 @@ module.exports = async function newMemberPossibleConnnections(familymember, root
                 possibleConnections.newConnections = true;
             }
         }
-
     }
 
+    if (relationship === "ChildMother") {
+        if (rootmember.spouse) {
+            possibleConnections.father = await Familymember.findById(rootmember.spouse);
+            possibleConnections.newConnections = true;
+        }
+        for (let childid of rootmember.children) {
+            if (!(childid.toString() === familymember._id.toString())) {
+                const sibling = await Familymember.findById(childid);
+                possibleConnections.siblings.push(sibling);
+                possibleConnections.newConnections = true;
+            }
+        }
 
+    }
+    if (relationship === "ChildFather") {
+        if (rootmember.spouse) {
+            possibleConnections.mother = await Familymember.findById(rootmember.spouse);
+            possibleConnections.newConnections = true;
+        }
+        for (let childid of rootmember.children) {
+            if (!(childid.toString() === familymember._id.toString())) {
+                const sibling = await Familymember.findById(childid);
+                possibleConnections.siblings.push(sibling);
+                possibleConnections.newConnections = true;
+            }
+        }
+    }
 
 
     return possibleConnections;

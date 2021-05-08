@@ -1,76 +1,41 @@
 const Familymember = require('../models/familymember');
 const Family = require('../models/family');
-const Memory = require('../models/memory');
 const isFamilyMember = require('../utilities/userIsFamilyMember');
 const createNewMember = require('../utilities/createNewMember');
 const { findById } = require('../models/familymember');
 const upload = require('../utilities/multerupload');
 const aws = require("aws-sdk");
 const { none } = require('../utilities/multerupload');
+const joinFamily = require('../utilities/joinFamily');
+const storeMemory = require('../utilities/storeMemory');
 const s3 = new aws.S3();
-
-
-
 
 
 module.exports.joinfamily = async (req, res) => {
     const user = req.user;
+    //Check if user is already in the family, if the user is possibly already in the family
+    //isFamilyMember will return the probable family member, 
+    //otherwise it will save the new member to a new family and member will be undefined
     let member = await isFamilyMember(user);
     res.render('familymembers/joinfamily', { member, user });
 }
 
 module.exports.albumpostinput = async (req, res) => {
     const user = req.user;
+    const page = "post";
     const { id } = req.params;
     const familymember = await Familymember.findById(id);
-    res.render('familymembers/albumnpost', { user, familymember });
+    res.render('familymembers/albumnpost', { user, familymember, page });
 }
 
 module.exports.albumpostmemory = async (req, res) => {
-    const { memorytext, date, file } = req.body;
-
+    const { memorytext, date } = req.body;
     const { id } = req.params;
     const user = req.user;
     const userid = user._id;
-    let memory = {};
-    let familymember = await Familymember.findById(id);
-    if (req.file) {
-        const { location, bucket, key } = req.file;
-        memory = new Memory({
-            familymember: id, description: memorytext, date: date, poster: userid,
-            image: { url: location, bucket: bucket, key: key }
-        });
-    }
-    else {
-        memory = new Memory({
-            familymember: id, description: memorytext, date: date, poster: userid
-        });
-    }
-    await memory.save();
-    familymember.memories.push(memory._id);
-    await familymember.save();
-    familymember = await Familymember.findById(id).populate({
-        path: 'memories',
-        populate: {
-            path: 'poster'
-        }
-    }).populate('poster');
-
-
-    let signedUrlArray = familymember.memories.map(memory => {
-        let params = { Bucket: "", Key: "" };
-        if (memory.image.url) {
-            params.Key = memory.image.key;
-            params.Bucket = memory.image.bucket;
-            return s3.getSignedUrl('getObject', params);
-        }
-        else {
-            return "none";
-        }
-    })
-
-
-    res.render('familymembers/familymemberalbum', { user, familymember, signedUrlArray });
+    let file = req.file;
+    await storeMemory(id, userid, memorytext, date, file);
+    res.redirect(`/familymember/${id}/album`);
 }
 
 
@@ -78,6 +43,7 @@ module.exports.albumpostmemory = async (req, res) => {
 module.exports.album = async (req, res) => {
     const user = req.user;
     const { id } = req.params;
+    const page = "album";
     const familymember = await Familymember.findById(id).populate({
         path: 'memories',
         populate: {
@@ -96,7 +62,7 @@ module.exports.album = async (req, res) => {
         }
     })
 
-    res.render('familymembers/familymemberalbum', { id, user, familymember, signedUrlArray });
+    res.render('familymembers/familymemberalbum', { id, user, familymember, signedUrlArray, page });
 }
 
 module.exports.addtofamily = async (req, res) => {
@@ -104,14 +70,8 @@ module.exports.addtofamily = async (req, res) => {
     const { id } = req.params;
     const user = req.user;
     if (answer === 'join') {
-        const familymember = await Familymember.findById(id).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
-        const family = await Family.findById(familymember.family);
-        familymember.userid = user._id;
-        user.family = family._id;
-        user.familymember = familymember._id;
-        await familymember.save();
-        await user.save();
-        res.render('familymembers/tree', { id, user, familymember });
+        await joinFamily(id, user);
+        res.redirect(`/familymember/${id}/tree`);
     }
     else {
         const familymember = new Familymember({ first: user.first, last: user.last, email: user.email, userid: user._id });
@@ -123,14 +83,14 @@ module.exports.addtofamily = async (req, res) => {
         user.family = family._id;
         user.familymember = familymember._id;
         await user.save();
-        res.render('familymembers/tree', { id, user, familymember });
+        res.redirect(`/familymember/${id}/tree`);
     }
 }
 
 
 module.exports.index = async (req, res) => {
     const user = req.user;
-    const page = "main";
+    const page = "useralbum";
     const id = user.familymember;
     const familymember = await Familymember.findById(id).populate({
         path: 'memories',
@@ -155,36 +115,41 @@ module.exports.index = async (req, res) => {
 
 module.exports.tree = async (req, res) => {
     const user = req.user;
+    const page = "tree";
     const { id } = req.params;
     const familymember = await Familymember.findById(id).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
-    res.render('familymembers/tree', { id, user, familymember });
+    res.render('familymembers/tree', { id, user, familymember, page });
 }
 
 module.exports.mytree = async (req, res) => {
     const user = req.user;
+    const page = "tree";
     const { id } = req.params;
     const memberid = user.familymember;
     const familymember = await Familymember.findOne(memberid).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
-    res.render('familymembers/tree', { id, user, familymember });
+    res.render('familymembers/tree', { id, user, familymember, page });
 }
 
 module.exports.renderNewMemberForm = async (req, res) => {
     const user = req.user;
+    const page = "newmember"
     const { id } = req.params;
     const familymember = await Familymember.findById(id);
-    res.render('familymembers/new', { user, familymember });
+    res.render('familymembers/new', { user, familymember, page });
 }
 
 module.exports.addNewMember = async (req, res) => {
     const user = req.user;
     const { id } = req.params;
+    const page = "addmember";
+    //fix - something wrong here inside of possible connections function
     const possibleConnections = await createNewMember(id, req.body.familymember);
     const familymember = await Familymember.findById(id).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
     if (possibleConnections.newConnections === true) {
-        res.render('familymembers/checkconnections', { id, user, familymember, possibleConnections });
+        res.render('familymembers/checkconnections', { id, user, familymember, possibleConnections, page });
     }
     else {
-        res.render('familymembers/tree', { id, user, familymember });
+        res.redirect(`/familymember/${id}/tree`);
     }
 }
 
@@ -192,10 +157,12 @@ module.exports.addNewMember = async (req, res) => {
 module.exports.checkConnectionsandUpdate = async (req, res) => {
     const { id, relationship } = req.params;
     const user = req.user;
+    const page = "back";
     let spouse;
     let mother;
     let father;
     let familymember = await Familymember.findById(id);
+    let family = familymember.family;
     const entirefam = req.body;
     let startsWithChild = /^child/;
     let startsWithSibling = /^sibling/;
@@ -258,7 +225,7 @@ module.exports.checkConnectionsandUpdate = async (req, res) => {
     await familymember.save();
     familymember = await Familymember.findById(id).populate('spouse').populate('children').populate('mother').populate('father').populate('siblings');
 
-    res.render('familymembers/tree', { id, user, familymember });
+    res.render('familymembers/tree', { id, user, familymember, page });
 }
 
 

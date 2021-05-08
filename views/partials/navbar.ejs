@@ -8,18 +8,34 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/">Home</a>
+          <%if(page && page==="home" ){%>
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+            <%}else{%>
+              <a class="nav-link" href="/">Home</a>
+              <%}%>
         </li>
         <% if (user){ %>
           <li class="nav-item">
-            <a class="nav-link" href="/familymember/<%=user._id%>/mytree">
-              <%=user.first%>'s Family Tree
-            </a>
+            <%if(page && page==="tree" ){%>
+              <a class="nav-link active" href="/familymember/<%=user._id%>/mytree">
+                <%=user.first%>'s Family Tree
+              </a>
+              <%}else{%>
+                <a class="nav-link" href="/familymember/<%=user._id%>/mytree">
+                  <%=user.first%>'s Family Tree
+                </a>
+                <%}%>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/familymember/<%=user._id%>">
-              <%=user.first%>'s Album
-            </a>
+            <%if(page && page==="useralbum" ){%>
+              <a class="nav-link active" href="/familymember/<%=user._id%>">
+                <%=user.first%>'s Album
+              </a>
+              <%}else{%>
+                <a class="nav-link" href="/familymember/<%=user._id%>">
+                  <%=user.first%>'s Album
+                </a>
+                <%}%>
           </li>
           <% } %>
       </ul>
@@ -32,7 +48,11 @@
           </li>
           <% } else{ %>
             <li class="nav-item">
-              <a class="nav-link" href="/login">Login</a>
+              <%if(page && page==="login" ){%>
+                <a class="nav-link active" href="/login">Login</a>
+                <%}else{%>
+                  <a class="nav-link" href="/login">Login</a>
+                  <%}%>
             </li>
             <li class="nav-item">
               <%if(page && page==="register" ){%>

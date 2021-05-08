@@ -14,7 +14,7 @@ module.exports.registerUser = async (req, res) => {
         const regUser = await User.register(user, password);
         req.login(regUser, err => {
             if (err) return next(err);
-            // req.flash('success', 'Successfully made a new user!');
+            req.flash('success', 'Successfully made a new user!');
             res.redirect('/familymember/joinfamily');
         });
 
@@ -22,7 +22,7 @@ module.exports.registerUser = async (req, res) => {
     }
     catch (e) {
 
-        // req.flash('error', e.message);
+        req.flash('error', e.message);
         //console.log('fail with error', e.message);
         console.log(e);
         res.redirect('/register');
@@ -31,7 +31,8 @@ module.exports.registerUser = async (req, res) => {
 
 module.exports.renderLoginForm = (req, res) => {
     const user = req.user;
-    res.render('users/login', { user });
+    const page = "login";
+    res.render('users/login', { user, page });
 }
 
 
