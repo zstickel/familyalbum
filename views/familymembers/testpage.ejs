@@ -1,0 +1,39 @@
+<% layout('/layouts/boilerplate',{user})%>
+    <div class="container">
+        <h1>
+            <%=familymember.first%>'s Memories
+        </h1>
+    </div>
+
+    <div class="container">
+        <div class="row row-flex g-3">
+            <%let memnumber=0; %>
+
+                <% for (let memory of familymember.memories) { %>
+
+                    <<div class="card overflow-auto" style="width: 18rem; height: 36rem;">
+                        <%if (signedUrlArray[memnumber]!=="none" ) {%>
+                            <img src="<%=signedUrlArray[memnumber]%>" class="card-img-top"
+                                alt="https://zanefamilyalbumstock.s3.amazonaws.com/tyler-nix-V3dHmb1MOXM-unsplash+(1).jpg">
+                            <%}else{%>
+                                <img src="https://zanefamilyalbumstock.s3.amazonaws.com/tyler-nix-V3dHmb1MOXM-unsplash+(1).jpg"
+                                    class="card-img-top"
+                                    alt="https://zanefamilyalbumstock.s3.amazonaws.com/tyler-nix-V3dHmb1MOXM-unsplash+(1).jpg">
+                                <%}%>
+                                    <div class="card-body">
+                                        <h5 class="card-title"> Posted by: <%=memory.poster.first%>
+                                                <%=memory.poster.last%>
+                                        </h5>
+                                        <p class="card-text">
+                                            <%=memory.description%>
+                                        </p>
+                                        <p class="card-text">Date: <%=memory.date.toString()%>
+                                        </p>
+                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                    </div>
+
+        </div>
+
+        <%memnumber++; } %>
+    </div>
+    </div>

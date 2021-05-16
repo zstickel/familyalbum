@@ -1,5 +1,8 @@
 const assert = require('assert');
 const squared = require('../utilities/squared')
+const groupByPoster = require('../utilities/organizememorybyposter');
+
+
 
 describe('Array', function () {
     describe('#indexOf()', function () {
@@ -17,3 +20,12 @@ describe('squared', function () {
         assert.equal(squared(18), 324);
     })
 })
+
+/*describe('groupByPoster', function () {
+    it('organizes memory array', function () {
+        assert.equal(groupByPoster(memoryArray),)
+    })
+})*/
+
+
+

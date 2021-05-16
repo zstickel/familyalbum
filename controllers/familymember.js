@@ -8,6 +8,7 @@ const aws = require("aws-sdk");
 const { none } = require('../utilities/multerupload');
 const joinFamily = require('../utilities/joinFamily');
 const storeMemory = require('../utilities/storeMemory');
+const groupByPoster = require('../utilities/organizememorybyposter');
 const s3 = new aws.S3();
 
 
@@ -50,6 +51,7 @@ module.exports.album = async (req, res) => {
             path: 'poster'
         }
     }).populate('poster');
+    const memberMemoriesOrganized = groupByPoster(familymember);
     let signedUrlArray = familymember.memories.map(memory => {
         let params = { Bucket: "", Key: "" };
         if (memory.image.url) {
@@ -61,8 +63,8 @@ module.exports.album = async (req, res) => {
             return "none";
         }
     })
-
-    res.render('familymembers/familymemberalbum', { id, user, familymember, signedUrlArray, page });
+    res.render('familymembers/testpage', { id, user, familymember, signedUrlArray, page, memberMemoriesOrganized });
+    // res.render('familymembers/familymemberalbum', { id, user, familymember, signedUrlArray, page });
 }
 
 module.exports.addtofamily = async (req, res) => {
