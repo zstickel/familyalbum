@@ -60,6 +60,7 @@ module.exports.album = async (req, res) => {
             return s3.getSignedUrl('getObject', params);
         }
         else {
+            //You may alternatively return a default image url below
             return "none";
         }
     })
@@ -108,6 +109,7 @@ module.exports.index = async (req, res) => {
             return s3.getSignedUrl('getObject', params);
         }
         else {
+            //You may alternatively return a default image URL below
             return "none";
         }
     })
