@@ -1,0 +1,3 @@
+# Family Album Application
+
+This is a nodejs/express web application that enables a family to privately share photos and memories. The application uses mongodb for the db layer and AWS s3 for object storage (distributed via signed URLs for security). The front end is implemented using ejs and bootstrap. You can deploy this application on any server capable of running nodejs/express. To get the application up and running, you will need to supply a mongo db url, a db session secret, aws credentials, and an s3 bucket in the .env. A db seeding script has been written for the application but is not included in this project.  This is very much a work in progress, but I'd be happy to collaborate with anyone that is interested in taking it further.   
